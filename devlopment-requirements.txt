@@ -1,0 +1,10 @@
+# Development requirement
+numpy
+pandas
+scikit-learn
+
+dagshub
+dvc
+lightgbm
+mlflow
+
