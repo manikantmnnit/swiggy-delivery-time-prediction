@@ -24,8 +24,8 @@ mlflow.set_experiment("DVC Pipeline")
 TARGET = "time_taken"
 
 # create logger
-logger = logging.getLogger("model_evaluation")
-logger.setLevel(logging.INFO)
+logger = logging.getLogger("model_evaluation")  # create logger
+logger.setLevel(logging.INFO) # set the level of logging
 
 # console handler
 handler = logging.StreamHandler()
@@ -34,13 +34,13 @@ handler.setLevel(logging.INFO)
 # add handler to logger
 logger.addHandler(handler)
 
-# create a fomratter
-formatter = logging.Formatter(fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# create a formatter    
+formatter = logging.Formatter(fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s') #  create formatter
 # add formatter to handler
 handler.setFormatter(formatter)
 
 
-def load_data(data_path: Path) -> pd.DataFrame:
+def load_data(data_path: Path) -> pd.DataFrame: # load the data from the path
     try:
         df = pd.read_csv(data_path)
     
@@ -50,7 +50,7 @@ def load_data(data_path: Path) -> pd.DataFrame:
     return df
 
 
-def make_X_and_y(data:pd.DataFrame, target_column: str):
+def make_X_and_y(data:pd.DataFrame, target_column: str): # split the data into X and y
     X = data.drop(columns=[target_column])
     y = data[target_column]
     return X, y
@@ -70,7 +70,7 @@ def save_model_info(save_json_path,run_id, artifact_path, model_name):
         json.dump(info_dict,f,indent=4)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # main function
     # root path
     root_path = Path(__file__).parent.parent.parent
     # train data load path
@@ -113,11 +113,11 @@ if __name__ == "__main__":
     logger.info("r2 score calculated")
     
     # calculate cross val scores
-    cv_scores = cross_val_score(model,
-                                X_train,
-                                y_train,
-                                cv=5,
-                                scoring="neg_mean_absolute_error",
+    cv_scores = cross_val_score(model, #`model` is the model object
+                                X_train, #`X_train` is the feature matrix
+                                y_train, #`y_train` is the target variable
+                                cv=5, # 5 fold cross validation
+                                scoring="neg_mean_absolute_error", # scoring metric is negative mean absolute error
                                 n_jobs=-1)
     logger.info("cross validation complete")
     
@@ -130,7 +130,7 @@ if __name__ == "__main__":
         mlflow.set_tag("model","Food Delivery Time Regressor")
 
         # log parameters
-        mlflow.log_params(model.get_params())
+        mlflow.log_params(model.get_params()) # log the model parameters
 
         # log metrics
         mlflow.log_metric("train_mae",train_mae)
