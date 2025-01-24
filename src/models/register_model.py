@@ -59,7 +59,7 @@ if __name__ == "__main__":
     
     # register the model
     model_version = mlflow.register_model(model_uri=model_registry_path,
-                                          name=model_name)
+                                          name=model_name)  # register the model
     
     
     # get the model version
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     logger.info(f"The latest model version in model registry is {registered_model_version}")
     
     # update the stage of the model to staging
-    client = MlflowClient()
+    client = MlflowClient() # create a mlflow client
     client.transition_model_version_stage(
         name=registered_model_name,
         version=registered_model_version,
