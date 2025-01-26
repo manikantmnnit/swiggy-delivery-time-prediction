@@ -38,6 +38,29 @@ def load_model_information(file_path):
         
     return run_info
 
+def assign_alias_to_stage(model_name, stage, alias):
+    """
+    Assign an alias to the latest version of a registered model within a specified stage and update its stage to "Staging".
+
+    :param model_name: The name of the registered model.
+    :param stage: The stage of the model version for which the alias is to be assigned. Can be
+                  "Production", "Staging", "Archived", or "None".
+    :param alias: The alias to assign to the model version.
+    :return: None
+    """
+    # Get the latest model version for the specified stage
+    latest_mv = client.get_latest_versions(model_name, stages=[stage])[0]
+    
+    # Update the stage of the model to "Staging"
+    client.transition_model_version_stage(
+        name=model_name,
+        version=latest_mv.version,
+        stage="Staging"
+    )
+    
+    # Assign an alias to the model version
+    client.set_registered_model_alias(model_name, alias, latest_mv.version)
+
 
 if __name__ == "__main__":
     # root path
@@ -69,11 +92,10 @@ if __name__ == "__main__":
     
     # update the stage of the model to staging
     client = MlflowClient() # create a mlflow client
-    client.transition_model_version_stage(
-        name=registered_model_name,
-        version=registered_model_version,
-        stage="Staging"
-    )
+    
+   # Example usage
+    assign_alias_to_stage(model_name=registered_model_name, stage="Staging", alias="staging")
+  
     
     logger.info("Model pushed to Staging stage")
     
